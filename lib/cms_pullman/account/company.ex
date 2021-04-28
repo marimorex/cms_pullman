@@ -9,7 +9,7 @@ defmodule CmsPullman.Account.Company do
     field :email, :string
     field :facebook, :string
     field :instagram, :string
-    field :is_active, :boolean, default: false
+    field :is_active, :boolean, default: true
     field :linkedin, :string
     field :location, :string
     field :location_2, :string
@@ -17,6 +17,7 @@ defmodule CmsPullman.Account.Company do
     field :phone_number_2, :string
 
     timestamps()
+    has_many :custom_fields, CmsPullman.Account.CustomField, foreign_key: :company_id, references: :company_id
   end
 
   @doc false

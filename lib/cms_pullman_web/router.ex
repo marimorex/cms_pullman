@@ -8,7 +8,9 @@ defmodule CmsPullmanWeb.Router do
   scope "/api", CmsPullmanWeb do
     pipe_through :api
 
-    resources "/companies", CompanyController
+    resources "/companies", CompanyController, except: [:new, :edit] do
+      resources "/custom_fields", CustomFieldController, except: [:new, :edit]
+    end
   end
 
   # Enables LiveDashboard only for development

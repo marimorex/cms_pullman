@@ -77,4 +77,71 @@ defmodule CmsPullman.AccountTest do
       assert %Ecto.Changeset{} = Account.change_company(company)
     end
   end
+
+  describe "custom_fields" do
+    alias CmsPullman.Account.CustomField
+
+    @valid_attrs %{description: "some description", is_active: true, link: "some link", logo: "some logo", name: "some name"}
+    @update_attrs %{description: "some updated description", is_active: false, link: "some updated link", logo: "some updated logo", name: "some updated name"}
+    @invalid_attrs %{description: nil, is_active: nil, link: nil, logo: nil, name: nil}
+
+    def custom_field_fixture(attrs \\ %{}) do
+      {:ok, custom_field} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Account.create_custom_field()
+
+      custom_field
+    end
+
+    test "list_custom_fields/0 returns all custom_fields" do
+      custom_field = custom_field_fixture()
+      assert Account.list_custom_fields() == [custom_field]
+    end
+
+    test "get_custom_field!/1 returns the custom_field with given id" do
+      custom_field = custom_field_fixture()
+      assert Account.get_custom_field!(custom_field.id) == custom_field
+    end
+
+    test "create_custom_field/1 with valid data creates a custom_field" do
+      assert {:ok, %CustomField{} = custom_field} = Account.create_custom_field(@valid_attrs)
+      assert custom_field.description == "some description"
+      assert custom_field.is_active == true
+      assert custom_field.link == "some link"
+      assert custom_field.logo == "some logo"
+      assert custom_field.name == "some name"
+    end
+
+    test "create_custom_field/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Account.create_custom_field(@invalid_attrs)
+    end
+
+    test "update_custom_field/2 with valid data updates the custom_field" do
+      custom_field = custom_field_fixture()
+      assert {:ok, %CustomField{} = custom_field} = Account.update_custom_field(custom_field, @update_attrs)
+      assert custom_field.description == "some updated description"
+      assert custom_field.is_active == false
+      assert custom_field.link == "some updated link"
+      assert custom_field.logo == "some updated logo"
+      assert custom_field.name == "some updated name"
+    end
+
+    test "update_custom_field/2 with invalid data returns error changeset" do
+      custom_field = custom_field_fixture()
+      assert {:error, %Ecto.Changeset{}} = Account.update_custom_field(custom_field, @invalid_attrs)
+      assert custom_field == Account.get_custom_field!(custom_field.id)
+    end
+
+    test "delete_custom_field/1 deletes the custom_field" do
+      custom_field = custom_field_fixture()
+      assert {:ok, %CustomField{}} = Account.delete_custom_field(custom_field)
+      assert_raise Ecto.NoResultsError, fn -> Account.get_custom_field!(custom_field.id) end
+    end
+
+    test "change_custom_field/1 returns a custom_field changeset" do
+      custom_field = custom_field_fixture()
+      assert %Ecto.Changeset{} = Account.change_custom_field(custom_field)
+    end
+  end
 end
